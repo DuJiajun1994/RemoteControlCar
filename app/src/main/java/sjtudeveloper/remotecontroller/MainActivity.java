@@ -3,7 +3,6 @@ package sjtudeveloper.remotecontroller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,6 +13,9 @@ import android.widget.ImageView;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
     private ImageView motion_button;
+    private boolean gravityFlag=true;
+    private GravitySensorManager gravitySensorManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
 
         motion_button.setOnTouchListener(this);
+
+        //gravity sensor part
+        if(gravityFlag) {
+            gravitySensorManager = new GravitySensorManager(MainActivity.this);
+            gravitySensorManager.register();
+            gravitySensorManager.unregister();
+        }
     }
 
     @Override
@@ -86,5 +95,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(gravitySensorManager!=null){
+            gravitySensorManager.unregister();}
     }
 }
