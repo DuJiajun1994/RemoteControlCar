@@ -89,6 +89,7 @@ public class BluetoothController {
      *  Z             rotating right
      */
     public void sendOrder(String order) {
+        if(!isConnected()) connect();
         try {
             Log.i("BluetoothController", "send order");
             ops.write(order.getBytes());
