@@ -13,15 +13,19 @@ import java.util.UUID;
  * Created by M_D_Luffy on 2015/11/2.
  */
 public class BluetoothController {
-    private BluetoothAdapter bta = null;
-    private BluetoothSocket bts = null;
-    private BluetoothDevice btd = null;
+    private BluetoothAdapter bta;
+    private BluetoothSocket bts;
+    private BluetoothDevice btd;
     private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private OutputStream ops = null;
+    private OutputStream ops;
 
-    BluetoothController() throws IOException{
-        Log.i("BluetoothController", "initial");
+    BluetoothController(){
         bta = BluetoothAdapter.getDefaultAdapter();
+        connect();
+    }
+
+    public void connect() {
+
         Set<BluetoothDevice> devices = bta.getBondedDevices();
         for(int i = 0 ; i < devices.size() ; i ++){
             BluetoothDevice device = (BluetoothDevice)
@@ -34,6 +38,7 @@ public class BluetoothController {
 
         if(btd == null){
             Log.i("BluetoothController", "error 1.1");
+            return;
         }
 
         try {
@@ -41,15 +46,13 @@ public class BluetoothController {
             bts = btd.createRfcommSocketToServiceRecord(uuid);
         } catch (IOException e) {
             Log.e("BluetoothController", "error 1.2");
-            throw e;
         }
-
+        if(isConnected()) return;
         try {
             // Connect the device through the socket. This will block
             // until it succeeds or throws an exception
             bts.connect();
             Log.i("BluetoothController", "connected");
-            //Toast.makeText(getApplicationContext(), "Connect success!", Toast.LENGTH_SHORT).show();
         } catch (IOException connectException) {
             Log.e("BluetoothController", "error 2: unable to connect, have to close the socket");
 
@@ -66,6 +69,12 @@ public class BluetoothController {
         } catch (IOException e1) {
             Log.e("BluetoothController", "error 1");
         }
+
+        return;
+    }
+
+    public boolean isConnected(){
+        return bts.isConnected();  //some exception not handled
     }
 
     public void run() {
@@ -85,7 +94,7 @@ public class BluetoothController {
         }
     }
 
-    public void turn_left() {
+    public void turnLeft() {
         try {
             ops.write("L".getBytes());
         } catch (IOException e) {
@@ -93,7 +102,7 @@ public class BluetoothController {
         }
     }
 
-    public void turn_right() {
+    public void turnRight() {
         try {
             ops.write("R".getBytes());
         } catch (IOException e) {
@@ -109,7 +118,7 @@ public class BluetoothController {
         }
     }
 
-    public void rotate_left() {
+    public void rotateLeft() {
         try {
             ops.write("Y".getBytes());
         } catch (IOException e) {
@@ -117,7 +126,7 @@ public class BluetoothController {
         }
     }
 
-    public void rotate_right() {
+    public void rotateRight() {
         try {
             ops.write("Z".getBytes());
         } catch (IOException e) {

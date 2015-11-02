@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView motion_button;
     private boolean gravityFlag=true;
     private GravitySensorManager gravitySensorManager;
+    private BluetoothController bct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,29 +39,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gravitySensorManager.register();
             gravitySensorManager.unregister();
         }
+
+        //use bluetooth to connect the car and mobile phone
+        bct = new BluetoothController();
     }
 
     @Override
     public void onClick(View v){
-        try{
-            BluetoothController bct = new BluetoothController();
-            bct.run();
-            bct.back();
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 1.2");
-        }
+
+        if(!bct.isConnected())
+            bct.connect();
+
 
         ImageView iv;
         switch(v.getId())
         {
             case R.id.stop_button:
+                bct.stop();
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.stop);
                 Log.i("MainActivity", "Width: " + iv.getHeight());
                 break;
             case R.id.top_button:
+                bct.run();
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.speed_up);
+                break;
+            case R.id.left_button:
+                bct.turnLeft();
+                break;
+            case R.id.right_button:
+                bct.turnRight();
                 break;
             default:
                 break;
