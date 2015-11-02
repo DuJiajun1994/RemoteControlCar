@@ -55,21 +55,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId())
         {
             case R.id.stop_button:
-                bct.stop();
+                bct.sendOrder("S");
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.stop);
                 Log.i("MainActivity", "Width: " + iv.getHeight());
                 break;
             case R.id.top_button:
-                bct.run();
+                bct.sendOrder("U");
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.speed_up);
                 break;
             case R.id.left_button:
-                bct.turnLeft();
+                bct.sendOrder("L");
                 break;
             case R.id.right_button:
-                bct.turnRight();
+                bct.sendOrder("R");
                 break;
             default:
                 break;

@@ -77,60 +77,24 @@ public class BluetoothController {
         return bts.isConnected();  //some exception not handled
     }
 
-    public void run() {
+    /**
+     *
+     * @param order
+     * "L" stands for turning left
+     *  R             turning right
+     *  U             going ahead
+     *  D             going back
+     *  S             stoping
+     *  Y             rotating left
+     *  Z             rotating right
+     */
+    public void sendOrder(String order) {
         try {
             Log.i("BluetoothController", "send order");
-            ops.write("U".getBytes());
+            ops.write(order.getBytes());
         } catch (IOException e) {
             Log.e("BluetoothController", "error 5");
         }
     }
 
-    public void back() {
-        try {
-            ops.write("D".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
-
-    public void turnLeft() {
-        try {
-            ops.write("L".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
-
-    public void turnRight() {
-        try {
-            ops.write("R".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
-
-    public void stop() {
-        try {
-            ops.write("S".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
-
-    public void rotateLeft() {
-        try {
-            ops.write("Y".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
-
-    public void rotateRight() {
-        try {
-            ops.write("Z".getBytes());
-        } catch (IOException e) {
-            Log.e("BluetoothController", "error 5");
-        }
-    }
 }
