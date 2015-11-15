@@ -10,11 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
     private ImageView motion_button;
     private boolean gravityFlag=true;
     private GravitySensorManager gravitySensorManager;
+    private BluetoothController bct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +38,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gravitySensorManager = new GravitySensorManager(MainActivity.this);
             gravitySensorManager.register();
         }
+
+        //use bluetooth to connect the car and mobile phone
+        bct = new BluetoothController();
     }
 
     @Override
     public void onClick(View v){
+
         ImageView iv;
         switch(v.getId())
         {
             case R.id.stop_button:
+                bct.sendOrder("S");
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.stop);
                 Log.i("MainActivity", "Width: " + iv.getHeight());
                 break;
             case R.id.top_button:
+                bct.sendOrder("U");
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.speed_up);
+                break;
+            case R.id.left_button:
+                bct.sendOrder("L");
+                break;
+            case R.id.right_button:
+                bct.sendOrder("R");
                 break;
             default:
                 break;
