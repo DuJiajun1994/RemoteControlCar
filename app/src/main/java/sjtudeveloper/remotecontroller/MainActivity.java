@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(gravityFlag) {
             gravitySensorManager = new GravitySensorManager(MainActivity.this);
             gravitySensorManager.register();
-            gravitySensorManager.unregister();
         }
     }
 
