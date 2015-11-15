@@ -30,17 +30,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
         btn = (Button)this.findViewById(R.id.top_button);
         btn.setOnClickListener(this);
+        btn = (Button)this.findViewById(R.id.left_button);
+        btn.setOnClickListener(this);
+        btn = (Button)this.findViewById(R.id.right_button);
+        btn.setOnClickListener(this);
 
         motion_button.setOnTouchListener(this);
 
-        //gravity sensor part
-        if(gravityFlag) {
-            gravitySensorManager = new GravitySensorManager(MainActivity.this);
-            gravitySensorManager.register();
-        }
-
         //use bluetooth to connect the car and mobile phone
         bct = new BluetoothController();
+
+        //gravity sensor part
+        if(gravityFlag) {
+            gravitySensorManager = new GravitySensorManager(MainActivity.this,bct);
+            gravitySensorManager.register();
+        }
     }
 
     @Override
@@ -50,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId())
         {
             case R.id.stop_button:
-                bct.sendOrder("S");
+                bct.sendOrder("D");
                 iv = (ImageView)this.findViewById(R.id.motion_button);
                 iv.setImageResource(R.drawable.stop);
                 Log.i("MainActivity", "Width: " + iv.getHeight());
