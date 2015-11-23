@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
@@ -22,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private GravitySensorManager gravitySensorManager;
     private BluetoothController bct;
     private VoiceRecognizer voiceRecognizer;
+    private Button speechRecognizerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
         btn = (Button)this.findViewById(R.id.right_button);
         btn.setOnClickListener(this);
-        btn = (Button) findViewById(R.id.speechRecognizer);
-        btn.setOnClickListener(this);
         motion_button.setOnTouchListener(this);
+
+        //speechRecognizerButton
+        speechRecognizerButton = (Button) findViewById(R.id.speechRecognizer);
+        speechRecognizerButton.setOnClickListener(this);
 
         //use bluetooth to connect the car and mobile phone
         bct = new BluetoothController();
@@ -52,8 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(speechRecognizerFlag){
             SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID+"=56501737");
-            voiceRecognizer = new VoiceRecognizer(MainActivity.this);
-            Log.e("debug", "position");
+            voiceRecognizer = new VoiceRecognizer(MainActivity.this,bct);
         }
     }
 
@@ -82,9 +83,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.speechRecognizer:
                 if(speechRecognizerFlag)
-                {voiceRecognizer.start();speechRecognizerFlag=false;}
+                {voiceRecognizer.start();speechRecognizerFlag=false;speechRecognizerButton.setText("Stop Speech");}
                 else
-                {voiceRecognizer.stop();speechRecognizerFlag=true;}
+                {voiceRecognizer.stop();speechRecognizerFlag=true;speechRecognizerButton.setText("Start Speech");}
 
                 break;
             default:
