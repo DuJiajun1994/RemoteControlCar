@@ -10,14 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.IOException;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.SpeechUtility;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
     private ImageView motion_button;
-    private boolean gravityFlag=true;
+    private boolean gravityFlag=false;
+    private boolean speechRecognizerFlag=true;
     private GravitySensorManager gravitySensorManager;
     private BluetoothController bct;
+    private VoiceRecognizer voiceRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn.setOnClickListener(this);
         btn = (Button)this.findViewById(R.id.right_button);
         btn.setOnClickListener(this);
-
+        btn = (Button) findViewById(R.id.speechRecognizer);
+        btn.setOnClickListener(this);
         motion_button.setOnTouchListener(this);
 
         //use bluetooth to connect the car and mobile phone
@@ -44,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(gravityFlag) {
             gravitySensorManager = new GravitySensorManager(MainActivity.this,bct);
             gravitySensorManager.register();
+        }
+        if(speechRecognizerFlag){
+            SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID+"=56501737");
+            voiceRecognizer = new VoiceRecognizer(MainActivity.this);
+            Log.e("debug", "position");
         }
     }
 
@@ -69,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.right_button:
                 bct.sendOrder("R");
+                break;
+            case R.id.speechRecognizer:
+                if(speechRecognizerFlag)
+                {voiceRecognizer.start();speechRecognizerFlag=false;}
+                else
+                {voiceRecognizer.stop();speechRecognizerFlag=true;}
+
                 break;
             default:
                 break;
@@ -120,5 +137,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         if(gravitySensorManager!=null){
             gravitySensorManager.unregister();}
+        if(SpeechUtility.getUtility()!=null){
+            SpeechUtility.getUtility().destroy();
+        }
     }
 }
