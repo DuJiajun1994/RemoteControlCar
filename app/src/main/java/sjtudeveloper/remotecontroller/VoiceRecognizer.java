@@ -111,26 +111,4 @@ public class VoiceRecognizer{
             Log.d("stopListener","speechllistener is not start");
     }
 
-//    public void unRegisterUser(){
-//        SpeechUtility.getUtility().destroy();
-//    }
-
-//    private SpeechListener listener = new SpeechListener() {
-//        @Override
-//        public void onEvent(int i, Bundle bundle) {
-//
-//        }
-//
-//        @Override
-//        public void onBufferReceived(byte[] bytes) {
-//
-//        }
-//
-//        @Override
-//        public void onCompleted(SpeechError speechError) {
-//            if(speechError != null) {
-//                Log.d(LISTENERTAG," sign in failed");
-//            }
-//        }
-//    };
 }
