@@ -1,5 +1,6 @@
 package sjtudeveloper.remotecontroller;
 
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BluetoothController bct;
     private VoiceRecognizer voiceRecognizer;
     private Button speechRecognizerButton;
+    private WifiController wifiController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gravitySensorManager.register();
         }
         if(speechRecognizerFlag){
-            SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID+"=56501737");
+            SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID + "=56501737");
             voiceRecognizer = new VoiceRecognizer(MainActivity.this,bct);
         }
+
+        NetWorkController netWorkController = new NetWorkController(MainActivity.this);
+
     }
 
     @Override
