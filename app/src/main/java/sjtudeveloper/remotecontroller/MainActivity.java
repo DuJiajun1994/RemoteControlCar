@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setContentView(new PathView(this));
-/*
+//        setContentView(new PathView(this));
+
         motion_button = (ImageView)this.findViewById(R.id.motion_button);
 
         Button btn = (Button)this.findViewById(R.id.stop_button);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //use bluetooth to connect the car and mobile phone
         bct = new BluetoothController();
 
-        */
+
     }
 
     @Override
