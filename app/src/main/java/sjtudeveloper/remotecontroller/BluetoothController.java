@@ -102,5 +102,4 @@ public class BluetoothController {
             Log.e("BluetoothController", "error 5");
         }
     }
-
 }
