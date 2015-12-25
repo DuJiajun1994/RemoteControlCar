@@ -89,7 +89,12 @@ public class BluetoothController {
      *  Z             rotating right
      */
     public void sendOrder(String order) {
-        if(!isConnected()) connect();
+        if(!isConnected())
+        {
+            Log.i("BluetoothController", "unconnected");
+            connect();
+        }
+        if(!isConnected()) return;
         try {
             Log.i("BluetoothController", "send order");
             ops.write(order.getBytes());

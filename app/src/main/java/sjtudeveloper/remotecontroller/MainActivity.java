@@ -1,6 +1,9 @@
 package sjtudeveloper.remotecontroller;
 
 import android.net.wifi.WifiManager;
+import android.content.Context;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,8 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        setContentView(new PathView(this));
 
         motion_button = (ImageView)this.findViewById(R.id.motion_button);
+        motion_button.setRotation(90);
+
 
         Button btn = (Button)this.findViewById(R.id.stop_button);
         btn.setOnClickListener(this);
@@ -55,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gravitySensorManager = new GravitySensorManager(MainActivity.this,bct);
             gravitySensorManager.register();
         }
+
+        //use bluetooth to connect the car and mobile phone
+        bct = new BluetoothController();
+
         if(speechRecognizerFlag){
             SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID + "=56501737");
             voiceRecognizer = new VoiceRecognizer(MainActivity.this,bct);
@@ -101,10 +112,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onTouch(View v, MotionEvent event){
+
+        /**
+         * information of the picture
+         * width: 540px height: 400px
+         * center position: center 200px
+         *
+         */
+
+        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+        int screen_width = wm.getDefaultDisplay().getWidth();
+        int[] location = new  int[2] ;
+        motion_button.getLocationOnScreen(location);//��ȡ��������Ļ�ڵľ�������
+        int center_X = screen_width / 2;
+        int center_Y = 376;                                                                                                              //���Ҫ��
+
+        float p_X = event.getRawX() - center_X;
+        float p_Y = event.getRawY() - center_Y;
+
         switch(event.getAction())
         {
-        case MotionEvent.ACTION_DOWN:
-                motion_button.setImageResource(R.drawable.speed_up);
+            case MotionEvent.ACTION_DOWN:
+                if(p_Y>=-200&&p_Y<=-120 && p_X>=-65&&p_X<=65) {
+                    motion_button.setImageResource(R.drawable.turn_left);
+                    bct.sendOrder("L");
+                }
+                if(p_Y<=200&&p_Y>=120 && p_X>=-65&&p_X<=65){
+                    motion_button.setImageResource(R.drawable.turn_right);
+                    bct.sendOrder("R");
+                }
+                if(p_Y>=-90&&p_Y<=90 && p_X>=-60&&p_X<=60){
+                    motion_button.setImageResource(R.drawable.stop);
+                    bct.sendOrder("S");
+                }
+                if(p_Y>=-100&&p_Y<=100 && p_X>=80&&p_X<=135){
+                    motion_button.setImageResource(R.drawable.speed_up);
+                    bct.sendOrder("U");
+                }
+                if(p_Y>=-100&&p_Y<=100 && p_X<=-80&&p_X>=-135){
+                    motion_button.setImageResource(R.drawable.slow_down);
+                    bct.sendOrder("D");
+                }
+
                 break;
             case MotionEvent.ACTION_UP:
                 motion_button.setImageResource(R.drawable.default_stop);
@@ -112,8 +161,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 break;
         }
-        Log.i("MainActivity", "Touch x: " + event.getX());
-        Log.i("MainActivity", "Touch y: " + event.getY());
+        Log.i("Touch", "Touch raw x: " + event.getRawX());
+        Log.i("Touch", "Touch raw y: " + event.getRawY());
+
+        Log.i("Touch", "Touch x: " + event.getX());
+        Log.i("Touch", "Touch y: " + event.getY());
+
         return true;
     }
 
